@@ -121,6 +121,8 @@ class MyLogo extends HTMLElement {
     <!-- <img src="./images/col-bg.png" width=200> -->
     </div>
         <br>
+        Votre texte : <input type="text" id="nameInput">
+        <br>
         Couleur : <input type="color" id="selecteurCouleur">
         <br>
         Taille : 5 <input type="range" val=40 min=5 max=100 
@@ -131,6 +133,14 @@ class MyLogo extends HTMLElement {
           <option value = "1">Background 1</option>
           <option value = "2">Background 2</option>
         </select>
+        <br>
+        Text position : <select id="selecteurPosition">
+          <option value = "0" selected>Gauche</option>
+          <option value = "1">Centre</option>
+          <option value = "2">Droite</option>
+        </select>
+        <br>
+        Lien de votre police : <input type="text" id="policeInput">
         <br>
         <button id="random">Random</button>
     `;
@@ -143,8 +153,6 @@ class MyLogo extends HTMLElement {
     // récupérer les propriétés/attributs HTML
     this.couleur = this.getAttribute("couleur");
     if (!this.couleur) this.couleur = "black";
-
-    console.log("couleur récupérée = " + this.couleur);
 
     this.text = this.getAttribute("text");
     this.animationClass = this.getAttribute("animation");
@@ -171,7 +179,6 @@ class MyLogo extends HTMLElement {
   fixRelativeURLs() {
     let images = this.shadowRoot.querySelectorAll('img');
     images.forEach((e) => {
-      console.log("dans le foreach")
       let imagePath = e.getAttribute('src');
       e.src = getBaseURL() + '/' + imagePath;
     });
@@ -193,9 +200,19 @@ class MyLogo extends HTMLElement {
         this.changeImg(event.target.value);
       });
 
+      this.shadowRoot.querySelector("#selecteurPosition")
+      .addEventListener("input", (event) => {
+        this.changePos(event.target.value);
+      });
+
       this.shadowRoot.querySelector("#random")
       .addEventListener("click", (event) => {
         this.randomize(event);
+      });
+
+      this.shadowRoot.querySelector("#nameInput")
+      .addEventListener("input", () => {
+        this.changeText(this.shadowRoot.querySelector("#nameInput").value);
       });
   }
 
@@ -208,10 +225,31 @@ class MyLogo extends HTMLElement {
     this.logo.style.fontSize = val + "px";
   }
 
+  changePos(val) {
+    switch (val) {
+      case "0":
+        this.logo.style.textAlign = "left";       
+      break;
+
+      case "1":
+        this.logo.style.textAlign = "center";
+      break;
+
+      case "2":
+        this.logo.style.textAlign = "right";
+      break;
+    }
+  }
+
+  changeText(val){
+    this.logo.innerHTML = val;
+  }
+
   randomize(){
     this.logo.style.fontSize = this.getRandomInt(5,100) + "px"; 
     this.logo.style.color = this.getRandomColor();
-    this.changeImg(this.getRandomInt(0,5) + "")
+    this.changeImg(this.getRandomInt(0,5) + "");
+    this.changePos(this.getRandomInt(0,3) + "");
   }
 
   getRandomInt(min,max) {
@@ -229,9 +267,11 @@ class MyLogo extends HTMLElement {
 
   changeImg(val){
     switch (val) {
+
       case "0":
         this.logo.style.background = "";
         break;
+
       case "1":
         this.logo.style.background = "url(" + getBaseURL() + "images/cool-bg.png)";
         this.logo.style.backgroundRepeat = "no-repeat";
@@ -241,7 +281,6 @@ class MyLogo extends HTMLElement {
       case "2":
         this.logo.style.background = "url(" + getBaseURL() + "images/flammes.jpg)";
         break;
-      
     }
   }
 }
