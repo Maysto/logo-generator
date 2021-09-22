@@ -176,6 +176,10 @@ class MyLogo extends HTMLElement {
 
   }
 
+  addFontURL(url) {
+    this.style += "@import url('"+ url +"');"
+  }
+
   fixRelativeURLs() {
     let images = this.shadowRoot.querySelectorAll('img');
     images.forEach((e) => {
@@ -214,6 +218,11 @@ class MyLogo extends HTMLElement {
       .addEventListener("input", () => {
         this.changeText(this.shadowRoot.querySelector("#nameInput").value);
       });
+
+      this.shadowRoot.querySelector("#policeInput")
+      .addEventListener("input", () => {
+        this.addFontURL(this.shadowRoot.querySelector("#policeInput").value);
+      });
   }
 
   // Fonction
@@ -246,7 +255,7 @@ class MyLogo extends HTMLElement {
   }
 
   randomize(){
-    this.logo.style.fontSize = this.getRandomInt(5,100) + "px"; 
+    this.logo.style.fontSize = this.getRandomInt(25,100) + "px"; 
     this.logo.style.color = this.getRandomColor();
     this.changeImg(this.getRandomInt(0,5) + "");
     this.changePos(this.getRandomInt(0,3) + "");
