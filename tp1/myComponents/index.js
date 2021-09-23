@@ -48,11 +48,12 @@ class MyLogo extends HTMLElement {
     opacity: 1;
   }
 }
-    #logo {
-        color:red;
-        font-size: 40px;
-        border:5px solid green;
-    }
+
+#logo {
+  color:red;
+  font-size: 40px;
+  border:5px solid green;
+}
 
 @-webkit-keyframes focus-in-expand-fwd {
   0% {
@@ -140,7 +141,11 @@ class MyLogo extends HTMLElement {
           <option value = "2">Droite</option>
         </select>
         <br>
-        Lien de votre police : <input type="text" id="policeInput">
+        <h1> Gestion de la bordure : </h1>
+        <br>
+          taille de la bordure : 0 <input type="range" id="borderThickness" min=0 max=50 val=10> 50
+        <br>
+          Couleur : <input type="color" id="borderColor">
         <br>
         <button id="random">Random</button>
     `;
@@ -154,6 +159,7 @@ class MyLogo extends HTMLElement {
     this.couleur = this.getAttribute("couleur");
     if (!this.couleur) this.couleur = "black";
 
+    this.borderColor = "black";
     this.text = this.getAttribute("text");
     this.animationClass = this.getAttribute("animation");
     this.controls = this.getAttribute("controls");
@@ -177,7 +183,7 @@ class MyLogo extends HTMLElement {
   }
 
   addFontURL(url) {
-    this.style += "@import url('"+ url +"');"
+    this.style += "@import url('" + url + "');"
   }
 
   fixRelativeURLs() {
@@ -199,29 +205,34 @@ class MyLogo extends HTMLElement {
         this.changeSize(event.target.value);
       });
 
-      this.shadowRoot.querySelector("#selecteurImage")
+    this.shadowRoot.querySelector("#borderThickness")
+      .addEventListener("input", (event) => {
+        this.changeBorderSize(event.target.value);
+      });
+
+    this.shadowRoot.querySelector("#borderColor")
+      .addEventListener("input", (event) => {
+        this.changeBorderColor(event.target.value);
+    });
+
+    this.shadowRoot.querySelector("#selecteurImage")
       .addEventListener("input", (event) => {
         this.changeImg(event.target.value);
       });
 
-      this.shadowRoot.querySelector("#selecteurPosition")
+    this.shadowRoot.querySelector("#selecteurPosition")
       .addEventListener("input", (event) => {
         this.changePos(event.target.value);
       });
 
-      this.shadowRoot.querySelector("#random")
+    this.shadowRoot.querySelector("#random")
       .addEventListener("click", (event) => {
         this.randomize(event);
       });
 
-      this.shadowRoot.querySelector("#nameInput")
+    this.shadowRoot.querySelector("#nameInput")
       .addEventListener("input", () => {
         this.changeText(this.shadowRoot.querySelector("#nameInput").value);
-      });
-
-      this.shadowRoot.querySelector("#policeInput")
-      .addEventListener("input", () => {
-        this.addFontURL(this.shadowRoot.querySelector("#policeInput").value);
       });
   }
 
@@ -234,47 +245,57 @@ class MyLogo extends HTMLElement {
     this.logo.style.fontSize = val + "px";
   }
 
+  changeBorderColor(val) {
+    this.logo.style.borderColor = val;
+  }
+
+  changeBorderSize(val) {
+    this.logo.style.borderWidth = val + "px";
+  }
+
   changePos(val) {
     switch (val) {
       case "0":
-        this.logo.style.textAlign = "left";       
-      break;
+        this.logo.style.textAlign = "left";
+        break;
 
       case "1":
         this.logo.style.textAlign = "center";
-      break;
+        break;
 
       case "2":
         this.logo.style.textAlign = "right";
-      break;
+        break;
     }
   }
 
-  changeText(val){
+  changeText(val) {
     this.logo.innerHTML = val;
   }
 
-  randomize(){
-    this.logo.style.fontSize = this.getRandomInt(25,100) + "px"; 
+  randomize() {
+    this.logo.style.fontSize = this.getRandomInt(25, 100) + "px";
     this.logo.style.color = this.getRandomColor();
-    this.changeImg(this.getRandomInt(0,5) + "");
-    this.changePos(this.getRandomInt(0,3) + "");
+    this.changeImg(this.getRandomInt(0, 5) + "");
+    this.changePos(this.getRandomInt(0, 3) + "");
+    this.changeBorderSize(this.getRandomInt(0,50) + "");
+    this.logo.style.borderColor = this.getRandomColor();
   }
 
-  getRandomInt(min,max) {
+  getRandomInt(min, max) {
     return Math.floor(Math.random() * max) + min;
   }
 
-  getRandomColor(){
+  getRandomColor() {
     var letters = '0123456789ABCDEF'
     var color = '#'
     for (let i = 0; i < 6; i++) {
-      color += letters[this.getRandomInt(0,16)]
+      color += letters[this.getRandomInt(0, 16)]
     }
     return color
   }
 
-  changeImg(val){
+  changeImg(val) {
     switch (val) {
 
       case "0":
@@ -286,7 +307,7 @@ class MyLogo extends HTMLElement {
         this.logo.style.backgroundRepeat = "no-repeat";
         this.logo.style.backgroundSize = "cover";
         break;
-  
+
       case "2":
         this.logo.style.background = "url(" + getBaseURL() + "images/flammes.jpg)";
         break;
