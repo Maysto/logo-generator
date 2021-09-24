@@ -129,11 +129,18 @@ class MyLogo extends HTMLElement {
         Taille : 5 <input type="range" val=40 min=5 max=100 
                           id="selecteurTaille"> 100
         <br>
+        Largeur : 50 <input type="range" val=100 min=50 max=5000 
+        id="selecteurLargeur"> 5000
+        Hauteur : 50 <input type="range" val=100 min=50 max=500 
+        id="selecteurHauteur"> 500
+        <br>
         Background : <select id="selecteurImage">
           <option value = "0" selected>No Background</option>
           <option value = "1">Background 1</option>
           <option value = "2">Background 2</option>
         </select>
+        <br>
+        Background URL : <input type="text" id="backgroundURL">
         <br>
         Text position : <select id="selecteurPosition">
           <option value = "0" selected>Gauche</option>
@@ -146,6 +153,8 @@ class MyLogo extends HTMLElement {
           taille de la bordure : 0 <input type="range" id="borderThickness" min=0 max=50 val=10> 50
         <br>
           Couleur : <input type="color" id="borderColor">
+        <br>
+          Radius : 0 <input type="range" id="borderRadius" min=0 max=30 val=0> 30
         <br>
         <button id="random">Random</button>
     `;
@@ -205,15 +214,30 @@ class MyLogo extends HTMLElement {
         this.changeSize(event.target.value);
       });
 
+    this.shadowRoot.querySelector("#borderRadius")
+      .addEventListener("input", (event) => {
+        this.changeRadius(event.target.value);
+      });
+
     this.shadowRoot.querySelector("#borderThickness")
       .addEventListener("input", (event) => {
         this.changeBorderSize(event.target.value);
       });
 
+    this.shadowRoot.querySelector("#selecteurHauteur")
+      .addEventListener("input", (event) => {
+        this.changeHeight(event.target.value);
+      });
+
+    this.shadowRoot.querySelector("#selecteurLargeur")
+      .addEventListener("input", (event) => {
+        this.changeWidth(event.target.value);
+      });
+
     this.shadowRoot.querySelector("#borderColor")
       .addEventListener("input", (event) => {
         this.changeBorderColor(event.target.value);
-    });
+      });
 
     this.shadowRoot.querySelector("#selecteurImage")
       .addEventListener("input", (event) => {
@@ -233,6 +257,11 @@ class MyLogo extends HTMLElement {
     this.shadowRoot.querySelector("#nameInput")
       .addEventListener("input", () => {
         this.changeText(this.shadowRoot.querySelector("#nameInput").value);
+      });
+
+    this.shadowRoot.querySelector("#backgroundURL")
+      .addEventListener("input", () => {
+        this.backgroundURL(this.shadowRoot.querySelector("#backgroundURL").value);
       });
   }
 
@@ -278,8 +307,9 @@ class MyLogo extends HTMLElement {
     this.logo.style.color = this.getRandomColor();
     this.changeImg(this.getRandomInt(0, 5) + "");
     this.changePos(this.getRandomInt(0, 3) + "");
-    this.changeBorderSize(this.getRandomInt(0,50) + "");
+    this.changeBorderSize(this.getRandomInt(0, 50) + "");
     this.logo.style.borderColor = this.getRandomColor();
+    this.changeRadius(this.getRandomInt(0, 20));
   }
 
   getRandomInt(min, max) {
@@ -293,6 +323,18 @@ class MyLogo extends HTMLElement {
       color += letters[this.getRandomInt(0, 16)]
     }
     return color
+  }
+
+  changeWidth(val) {
+    this.logo.style.width = val + "px";
+  }
+
+  changeHeight(val) {
+    this.logo.style.height = val + "px";
+  }
+
+  changeRadius(val) {
+    this.logo.style.borderRadius = val + "px";
   }
 
   changeImg(val) {
@@ -312,6 +354,10 @@ class MyLogo extends HTMLElement {
         this.logo.style.background = "url(" + getBaseURL() + "images/flammes.jpg)";
         break;
     }
+  }
+
+  backgroundURL(url) {
+    this.logo.style.background = "url(" + url + ")";
   }
 }
 
