@@ -155,7 +155,11 @@ class MyLogo extends HTMLElement {
         <br>
           Radius : 0 <input type="range" id="borderRadius" min=0 max=30 val=0> 30
         <br>
-        Border URL : <input type="text" id="borderURL">
+        Border URL : <select id="selecteurBordure">
+        <option value = "" selected>Select your border</option>
+        <option value = "0">Coeur</option>
+        <option value = "1">Brodery</option>
+      </select>
         <br>
         <button id="random">Random</button>
     `;
@@ -169,7 +173,6 @@ class MyLogo extends HTMLElement {
     this.couleur = this.getAttribute("couleur");
     if (!this.couleur) this.couleur = "black";
 
-    this.borderColor = "black";
     this.text = this.getAttribute("text");
     this.animationClass = this.getAttribute("animation");
     this.controls = this.getAttribute("controls");
@@ -265,9 +268,9 @@ class MyLogo extends HTMLElement {
         this.backgroundURL(this.shadowRoot.querySelector("#backgroundURL").value);
       });
     
-    this.shadowRoot.querySelector("#borderURL")
-      .addEventListener("input", () => {
-        this.borderURL(this.shadowRoot.querySelector("#borderURL").value);
+    this.shadowRoot.querySelector("#selecteurBordure")
+      .addEventListener("input", (event) => {
+        this.changeBorder(event.target.value);
       });
   }
 
@@ -322,10 +325,18 @@ class MyLogo extends HTMLElement {
     return Math.floor(Math.random() * max) + min;
   }
 
-  borderURL(url) {
-    this.logo.style.borderImageSource = "url(" + url + ")"
+  changeBorder(val) {
     this.logo.style.borderImageSlice = "20" + " 22";
     this.logo.style.borderImageRepeat = "round";
+    switch (val) {
+      case "0":
+        this.logo.style.borderImageSource = "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/652/hearts-border-image.png)";
+        break;
+    
+      case "1":
+        this.logo.style.borderImageSource = "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/652/pink-doily-bdr.png)"
+        break;
+    }
   }
 
   getRandomColor() {
