@@ -149,12 +149,13 @@ class MyLogo extends HTMLElement {
         </select>
         <br>
         <h1> Gestion de la bordure : </h1>
-        <br>
           taille de la bordure : 0 <input type="range" id="borderThickness" min=0 max=50 val=10> 50
         <br>
           Couleur : <input type="color" id="borderColor">
         <br>
           Radius : 0 <input type="range" id="borderRadius" min=0 max=30 val=0> 30
+        <br>
+        Border URL : <input type="text" id="borderURL">
         <br>
         <button id="random">Random</button>
     `;
@@ -263,6 +264,11 @@ class MyLogo extends HTMLElement {
       .addEventListener("input", () => {
         this.backgroundURL(this.shadowRoot.querySelector("#backgroundURL").value);
       });
+    
+    this.shadowRoot.querySelector("#borderURL")
+      .addEventListener("input", () => {
+        this.borderURL(this.shadowRoot.querySelector("#borderURL").value);
+      });
   }
 
   // Fonction
@@ -314,6 +320,12 @@ class MyLogo extends HTMLElement {
 
   getRandomInt(min, max) {
     return Math.floor(Math.random() * max) + min;
+  }
+
+  borderURL(url) {
+    this.logo.style.borderImageSource = "url(" + url + ")"
+    this.logo.style.borderImageSlice = "20" + " 22";
+    this.logo.style.borderImageRepeat = "round";
   }
 
   getRandomColor() {
