@@ -144,16 +144,6 @@ class MyLogo extends HTMLElement {
           <option value = "2">Background 2</option>
         </select>
         <br>
-        Police : <select id="selecteurPolice">
-          <option value = "'Grey Qo', cursive" selected>Grey Qo</option>
-          <option value = "'Bonheur Royale', cursive">Bonheur Royal</option>
-          <option value = "'Lobster', cursive">Lobster</option>
-          <option value = "'Shadows Into Light', cursive">Shadows into Light</option>
-          <option value = "'Grechen Fuemen', cursive">Grechen Fuemen</option>
-        </select>
-        <br>
-        Police URL : <input type="text" id="policeURL">
-        <br>
         Background URL : <input type="text" id="backgroundURL">
         <br>
         Text position : <select id="selecteurPosition">
@@ -169,7 +159,7 @@ class MyLogo extends HTMLElement {
         <br>
           Radius : 0 <input type="range" id="borderRadius" min=0 max=30 val=0> 30
         <br>
-        Border URL : <select id="selecteurBordure">
+        Border : <select id="selecteurBordure">
         <option value = "" selected>Select your border</option>
         <option value = "0">Coeur</option>
         <option value = "1">Brodery</option>
@@ -184,13 +174,16 @@ class MyLogo extends HTMLElement {
     this.attachShadow({ mode: "open" });
 
     // récupérer les propriétés/attributs HTML
-    this.couleur = this.getAttribute("couleur");
-    if (!this.couleur) this.couleur = "black";
-
+    this.textColor = this.getAttribute("color");
+    if (!this.textColor) this.textColor = "black";
+    this.textSize = this.getAttribute("textSize");
     this.text = this.getAttribute("text");
+    this.background = this.getAttribute("background");
+    this.textPosition = this.getAttribute("textPosition");
+    this.borderThickness = this.getAttribute("borderThickness");
+    this.borderColor = this.getAttribute("borderColor");
+    this.borderRadius = this.getAttribute("borderRadius");
     this.animationClass = this.getAttribute("animation");
-    this.controls = this.getAttribute("controls");
-    this.size = this.getAttribute("size");
   }
 
   connectedCallback() {
@@ -200,8 +193,16 @@ class MyLogo extends HTMLElement {
 
     this.logo = this.shadowRoot.querySelector("#logo");
     // affecter les valeurs des attributs à la création
-    this.logo.style.color = this.couleur;
+    this.logo.style.color = this.textColor;
     this.logo.classList.add(this.animationClass);
+    this.logo.style.fontSize = this.textSize;
+    this.logo.innerHTML = this.text;
+    this.logo.style.background = "url(" + this.background + ")";
+    this.logo.style.textAlign = this.textPosition;
+    this.logo.style.borderRadius = this.borderRadius + "px";
+    this.logo.style.borderColor = this.borderColor;
+    this.logo.style.borderWidth = this.borderThickness + "px";
+
     this.declareEcouteurs();
 
     // On modifie les URLs relatifs
@@ -286,11 +287,6 @@ class MyLogo extends HTMLElement {
       .addEventListener("input", (event) => {
         this.changeBorder(event.target.value);
       });
-
-    this.shadowRoot.querySelector("#selecteurPolice")
-      .addEventListener("input", (event) => {
-        this.changeFont(event.target.value);
-      });
   }
 
   // Fonction
@@ -301,10 +297,6 @@ class MyLogo extends HTMLElement {
   changeSize(val) {
     this.logo.style.fontSize = val + "px";
   }
-
-  changeFont(name) {
-    this.logo.style.fontFamily = name;
-}
 
   changeBorderColor(val) {
     this.logo.style.borderColor = val;
@@ -352,6 +344,9 @@ class MyLogo extends HTMLElement {
     this.logo.style.borderImageSlice = "20" + " 22";
     this.logo.style.borderImageRepeat = "round";
     switch (val) {
+      case "":
+        this.logo.style.borderImageSource = "";
+        break;
       case "0":
         this.logo.style.borderImageSource = "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/652/hearts-border-image.png)";
         break;
