@@ -5,6 +5,10 @@ const getBaseURL = () => {
 class MyLogo extends HTMLElement {
   style = `
     @import url('https://fonts.googleapis.com/css2?family=Grey+Qo&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bonheur+Royale&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Grechen+Fuemen&display=swap');
 
     #logo {
         font-family: 'Grey Qo', cursive;
@@ -140,6 +144,16 @@ class MyLogo extends HTMLElement {
           <option value = "2">Background 2</option>
         </select>
         <br>
+        Police : <select id="selecteurPolice">
+          <option value = "'Grey Qo', cursive" selected>Grey Qo</option>
+          <option value = "'Bonheur Royale', cursive">Bonheur Royal</option>
+          <option value = "'Lobster', cursive">Lobster</option>
+          <option value = "'Shadows Into Light', cursive">Shadows into Light</option>
+          <option value = "'Grechen Fuemen', cursive">Grechen Fuemen</option>
+        </select>
+        <br>
+        Police URL : <input type="text" id="policeURL">
+        <br>
         Background URL : <input type="text" id="backgroundURL">
         <br>
         Text position : <select id="selecteurPosition">
@@ -272,6 +286,11 @@ class MyLogo extends HTMLElement {
       .addEventListener("input", (event) => {
         this.changeBorder(event.target.value);
       });
+
+    this.shadowRoot.querySelector("#selecteurPolice")
+      .addEventListener("input", (event) => {
+        this.changeFont(event.target.value);
+      });
   }
 
   // Fonction
@@ -282,6 +301,10 @@ class MyLogo extends HTMLElement {
   changeSize(val) {
     this.logo.style.fontSize = val + "px";
   }
+
+  changeFont(name) {
+    this.logo.style.fontFamily = name;
+}
 
   changeBorderColor(val) {
     this.logo.style.borderColor = val;
@@ -375,6 +398,8 @@ class MyLogo extends HTMLElement {
 
       case "2":
         this.logo.style.background = "url(" + getBaseURL() + "images/flammes.jpg)";
+        this.logo.style.backgroundRepeat = "no-repeat";
+        this.logo.style.backgroundSize = "cover";
         break;
     }
   }
